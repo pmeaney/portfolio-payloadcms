@@ -37,6 +37,18 @@ for i in $(seq 1 30); do
   sleep 3
 done
 
+# Check if migrations directory exists
+if [ ! -d "/app/src/migrations" ] || [ -z "$(ls -A /app/src/migrations 2>/dev/null)" ]; then
+  echo "Migrations directory is empty or doesn't exist, creating..."
+  mkdir -p /app/src/migrations
+  
+  # Create initial migration if directory is empty
+  if [ -z "$(ls -A /app/src/migrations 2>/dev/null)" ]; then
+    echo "Creating initial migration..."
+    NODE_OPTIONS=--no-deprecation pnpm run payload:migrate:create --name initial
+  fi
+fi
+
 # Run migrations
 echo "Running database migrations..."
 NODE_OPTIONS=--no-deprecation pnpm run payload:migrate
