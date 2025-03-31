@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/pmeaney/tmp-payloadcms-portfolio2025/actions/workflows/z-main.yml/badge.svg)](https://github.com/pmeaney/tmp-payloadcms-portfolio2025/actions/workflows/z-main.yml)
+[![Build Status](https://github.com/pmeaney/tmp-payloadcms-portfolio/actions/workflows/z-main.yml/badge.svg)](https://github.com/pmeaney/tmp-payloadcms-portfolio/actions/workflows/z-main.yml)
 
 
 # Dockerized PayloadCMS + Postgres Portfolio Project Template

@@ -6,6 +6,8 @@ import { HighImpactHero } from '@/heros/HighImpact'
 import { LowImpactHero } from '@/heros/LowImpact'
 import { MediumImpactHero } from '@/heros/MediumImpact'
 
+// TEST
+
 const heroes = {
   highImpact: HighImpactHero,
   lowImpact: LowImpactHero,
