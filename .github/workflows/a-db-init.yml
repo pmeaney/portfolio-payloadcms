@@ -115,7 +115,7 @@ jobs:
           docker run -d \
             --name payloadcms-postgres-db-portfolio-prod \
             --network private-payloadcms-pg-dockernet \
-            --env-file ./payloadcms-postgres-db-portfolio2025/postgres-env-prod.env \
+            --env-file ~/payloadcms-postgres-db-portfolio2025/postgres-env-prod.env \
             -p 5432:5432 \
             -v payloadcms-postgres-data-prod:/var/lib/postgresql/data \
             -v payloadcms-postgres-init-scripts-prod:/docker-entrypoint-initdb.d \

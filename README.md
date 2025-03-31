@@ -146,7 +146,6 @@ flowchart TB
         - Connect to main network
         - Map port 3000
         - Inject env vars"]
-        RunContainer --> CleanupEnvFile["Remove temp env file"]
         
         FinalDockerImage -.-> PullImage
     end
