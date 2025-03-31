@@ -6,7 +6,7 @@ interface Props {
   loading?: 'lazy' | 'eager'
   priority?: 'auto' | 'high' | 'low'
 }
-// Test123456
+// Test
 export const Logo = (props: Props) => {
   const { loading: loadingFromProps, priority: priorityFromProps, className } = props
 
