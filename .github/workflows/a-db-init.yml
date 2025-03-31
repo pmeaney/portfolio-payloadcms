@@ -103,15 +103,19 @@ jobs:
           ssh prod "mkdir -p ~/payloadcms-postgres-db-portfolio2025"
 
           # Create the temporary prod env file directly on the remote server
-          ssh prod 'echo "$POSTGRES__PROD_ENV" > ~/payloadcms-postgres-db-portfolio2025/postgres-env-prod.env'
+          # Echo the env var content with proper quoting for multiline preservation
+          ssh prod "echo '$POSTGRES__PROD_ENV' > ~/payloadcms-postgres-db-portfolio2025/postgres-env-prod.env"
 
           # Create Docker network if it doesn't exist
           # This network is for PayloadCMS & Postgres to communicate, hence "private" in its name
-          ssh prod "docker network create private-payloadcms-pg-dockernet || true"
+          ssh prod "docker network inspect private-payloadcms-pg-dockernet >/dev/null 2>&1 || docker network create private-payloadcms-pg-dockernet"
 
+          # Create volumes if they don't exist
+          ssh prod "docker volume inspect payloadcms-postgres-data-prod >/dev/null 2>&1 || docker volume create payloadcms-postgres-data-prod"
+          ssh prod "docker volume inspect payloadcms-postgres-init-scripts-prod >/dev/null 2>&1 || docker volume create payloadcms-postgres-init-scripts-prod"
+          
           # Run the container on the remote server
-          ssh prod "docker volume create payloadcms-postgres-data-prod && \
-          docker volume create payloadcms-postgres-init-scripts-prod && \
+          ssh prod "\
           docker run -d \
             --name payloadcms-postgres-db-portfolio-prod \
             --network private-payloadcms-pg-dockernet \
