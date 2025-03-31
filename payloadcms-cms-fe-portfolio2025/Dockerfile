@@ -74,8 +74,13 @@ COPY --from=builder /tmp/entrypoint.sh /runtime-prep/entrypoint.sh
 
 # Copy src directory, ensuring migrations folder exists
 RUN mkdir -p /runtime-prep/src/migrations
-# Copy migrations if they exist
-COPY --from=builder /app/src/migrations /runtime-prep/src/migrations
+# Copy migrations if they exist (check first if directory has content)
+RUN if [ -d "/app/src/migrations" ] && [ "$(ls -A /app/src/migrations 2>/dev/null)" ]; then \
+      echo "Copying migrations..." && \
+      cp -r /app/src/migrations/* /runtime-prep/src/migrations/; \
+    else \
+      echo "No migrations to copy"; \
+    fi
 
 # Copy additional files based on build mode
 RUN if [ "$SKIP_NEXTJS_BUILD" = "true" ]; then \
