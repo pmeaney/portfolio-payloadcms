@@ -163,11 +163,11 @@ jobs:
             --build-arg ENV_FILE=env-defaults.env \
             --build-arg SKIP_NEXTJS_BUILD=true \
             --no-cache \
-            -t ghcr.io/pmeaney/template-payloadcms-portfolio2025:latest \
+            -t ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest \
             ./payloadcms-cms-fe-portfolio2025
             
           # Push the Docker image to GitHub Container Registry
-          docker push ghcr.io/pmeaney/template-payloadcms-portfolio2025:latest
+          docker push ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest
 
           #  Delete local env var file (defaults) after transfer
           rm ./payloadcms-cms-fe-portfolio2025/env-defaults.env
@@ -212,7 +212,7 @@ jobs:
           ssh prod "echo '$PAYLOADCMS__PROD_ENV' > ~/payloadcms-prod-env.env"
 
           # Deploy to remote server with environment file
-          ssh prod "docker pull ghcr.io/pmeaney/template-payloadcms-portfolio2025:latest && \
+          ssh prod "docker pull ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest && \
                     docker rm -f payloadcms-cms-fe-portfolio-prod || true && \
                     docker run -d \
                       --name payloadcms-cms-fe-portfolio-prod \
@@ -220,7 +220,7 @@ jobs:
                       --network main-network--npm020325 \
                       -p 3000:3000 \
                       --env-file ~/payloadcms-prod-env.env \
-                      ghcr.io/pmeaney/template-payloadcms-portfolio2025:latest"
+                      ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest"
 
           echo "Deleting temporarily created prod env file..."
           ssh prod "rm ~/payloadcms-prod-env.env"
