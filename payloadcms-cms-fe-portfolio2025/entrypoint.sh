@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+# Set global NODE_OPTIONS to suppress deprecation warnings
+export NODE_OPTIONS="--no-deprecation"
+
 echo "Starting PayloadCMS application..."
 
 # Basic environment checks
@@ -50,20 +53,17 @@ if [ ! -d "/app/src/migrations" ] || [ -z "$(ls -A /app/src/migrations 2>/dev/nu
     echo "Note: This is a Production-First with Local Sync migration methodology-- the remote server is the origin of truth"
     echo "As needed, we pull the remote servers data to local dev machines for development"
     echo "Creating initial migration..."
-    export NODE_OPTIONS="--no-deprecation"
     pnpm run payload:migrate:create --name initial
   fi
 fi
 
 # Run migrations
 echo "Running database migrations..."
-export NODE_OPTIONS="--no-deprecation"
 pnpm run payload:migrate
 
 # Build if needed (for CICD skip build mode)
 if [ -f .next/skip-build ]; then
   echo "Running Next.js build..."
-  export NODE_OPTIONS="--no-deprecation"
   export NEXT_SKIP_DB_CONNECT=true
   # Run build and handle postbuild via exec to ensure environment variables are properly passed
   pnpm run build && pnpm run postbuild
@@ -71,5 +71,4 @@ fi
 
 # Start application
 echo "Starting Next.js application..."
-export NODE_OPTIONS="--no-deprecation"
 exec pnpm run start
