@@ -16,6 +16,13 @@ Stack:
   - [ ] Production-first.  Will run initial migration on remote.  Then, will pull those files to local and commit them.  And periodically will download the data as well:
     - Setup a methodology (e.g. shell script) for Periodic Database Dumps and Restores, so local dev env has same data as remote prod env.
 
+## Resources
+
+- Original Repo, where I figured out a deployment methodology: 
+  - [template-payloadcms-portfolio2025](https://github.com/pmeaney/template-payloadcms-portfolio2025)
+- [PayloadCMS's Website Template](https://github.com/payloadcms/payload/tree/main/templates/website)
+
+
 ## Local dev
 
 - Clone project

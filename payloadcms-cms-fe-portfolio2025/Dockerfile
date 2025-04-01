@@ -70,6 +70,7 @@ COPY --from=builder /app/postcss.config.js /runtime-prep/
 COPY --from=builder /app/tailwind.config.mjs /runtime-prep/
 COPY --from=builder /app/tsconfig.json /runtime-prep/
 COPY --from=builder /app/redirects.js /runtime-prep/
+COPY --from=builder /app/next-sitemap.config.cjs /runtime-prep/
 COPY --from=builder /tmp/entrypoint.sh /runtime-prep/entrypoint.sh
 
 # Copy src directory, ensuring migrations folder exists

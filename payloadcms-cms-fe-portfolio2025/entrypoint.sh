@@ -44,21 +44,32 @@ if [ ! -d "/app/src/migrations" ] || [ -z "$(ls -A /app/src/migrations 2>/dev/nu
   
   # Create initial migration if directory is empty
   if [ -z "$(ls -A /app/src/migrations 2>/dev/null)" ]; then
-    echo "Migrations directory is empty.  Creating initial migration..."
-    NODE_OPTIONS=--no-deprecation pnpm run payload:migrate:create --name initial
+    echo "the /src/migration directory is empty."
+    echo "If you would like [entrypoint.sh] to create an initial migration, comment its create migration command back into the script"
+    echo "For now, leaving it commented out for clarity, now that an initial migration was created on the server"
+    echo "Note: This is a Production-First with Local Sync migration methodology-- the remote server is the origin of truth"
+    echo "As needed, we pull the remote servers data to local dev machines for development"
+    echo "Creating initial migration..."
+    export NODE_OPTIONS="--no-deprecation"
+    pnpm run payload:migrate:create --name initial
   fi
 fi
 
 # Run migrations
 echo "Running database migrations..."
-NODE_OPTIONS=--no-deprecation pnpm run payload:migrate
+export NODE_OPTIONS="--no-deprecation"
+pnpm run payload:migrate
 
 # Build if needed (for CICD skip build mode)
 if [ -f .next/skip-build ]; then
   echo "Running Next.js build..."
-  NEXT_SKIP_DB_CONNECT=true NODE_OPTIONS=--no-deprecation pnpm run build
+  export NODE_OPTIONS="--no-deprecation"
+  export NEXT_SKIP_DB_CONNECT=true
+  # Run build and handle postbuild via exec to ensure environment variables are properly passed
+  pnpm run build && pnpm run postbuild
 fi
 
 # Start application
 echo "Starting Next.js application..."
-exec NODE_OPTIONS=--no-deprecation pnpm run start
+export NODE_OPTIONS="--no-deprecation"
+exec pnpm run start
