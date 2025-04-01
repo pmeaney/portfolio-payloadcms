@@ -108,7 +108,7 @@ jobs:
 
           # Create Docker network if it doesn't exist
           # This network is for PayloadCMS & Postgres to communicate, hence "private" in its name
-          ssh prod "docker network inspect private-payloadcms-pg-dockernet >/dev/null 2>&1 || docker network create private-payloadcms-pg-dockernet"
+          ssh prod "docker network ls --filter name=private-payloadcms-pg-dockernet -q | grep -q . || docker network create private-payloadcms-pg-dockernet"
 
           # Create volumes if they don't exist
           ssh prod "docker volume inspect payloadcms-postgres-data-prod >/dev/null 2>&1 || docker volume create payloadcms-postgres-data-prod"

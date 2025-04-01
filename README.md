@@ -11,8 +11,10 @@ Stack:
 
 # To Do
 
-- Setup CICD to deploy prod version to remote server
-- Setup a methodology (e.g. shell script) for Periodic Database Dumps and Restores, so local dev env has same data as remote prod env.
+- [X] Setup CICD to deploy prod version to remote server
+- [ ] Setup migration scheme
+  - [ ] Production-first.  Will run initial migration on remote.  Then, will pull those files to local and commit them.  And periodically will download the data as well:
+    - Setup a methodology (e.g. shell script) for Periodic Database Dumps and Restores, so local dev env has same data as remote prod env.
 
 ## Local dev
 

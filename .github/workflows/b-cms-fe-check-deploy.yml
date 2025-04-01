@@ -211,6 +211,9 @@ jobs:
           echo "Creating temporary environment file..."
           ssh prod "echo '$PAYLOADCMS__PROD_ENV' > ~/payloadcms-prod-env.env"
 
+          # Ensure Docker network exists (create if it doesn't)
+          ssh prod "docker network ls --filter name=private-payloadcms-pg-dockernet -q | grep -q . || docker network create private-payloadcms-pg-dockernet"
+          
           # Deploy to remote server with environment file
           ssh prod "docker pull ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest && \
                     docker rm -f payloadcms-cms-fe-portfolio-prod || true && \
