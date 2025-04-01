@@ -44,7 +44,7 @@ if [ ! -d "/app/src/migrations" ] || [ -z "$(ls -A /app/src/migrations 2>/dev/nu
   
   # Create initial migration if directory is empty
   if [ -z "$(ls -A /app/src/migrations 2>/dev/null)" ]; then
-    echo "Creating initial migration..."
+    echo "Migrations directory is empty.  Creating initial migration..."
     NODE_OPTIONS=--no-deprecation pnpm run payload:migrate:create --name initial
   fi
 fi
