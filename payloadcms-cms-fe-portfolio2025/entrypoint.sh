@@ -56,12 +56,7 @@ fi
 
 # Create initial migration if directory is empty
 if [ -z "$(ls -A /app/src/migrations 2>/dev/null)" ]; then
-  echo "the /src/migration directory is empty."
-  echo "If you would like [entrypoint.sh] to create an initial migration, comment its create migration command back into the script"
-  echo "For now, leaving it commented out for clarity, now that an initial migration was created on the server"
-  echo "Note: This is a Production-First with Local Sync migration methodology-- the remote server is the origin of truth"
-  echo "Migration files will be stored in ~/payloadcms-cms-fe-portfolio2025__migrations on the host server"
-  echo "As needed, we pull the remote servers data to local dev machines for development"
+  echo "The /src/migration directory is empty."
   echo "Creating initial migration..."
   pnpm run payload:migrate:create --name initial
   
@@ -69,11 +64,36 @@ if [ -z "$(ls -A /app/src/migrations 2>/dev/null)" ]; then
   chmod -R 755 /app/src/migrations
   
   echo "Initial migration created and accessible in the host filesystem."
+  
+  # Store this as the last migration run
+  find /app/src/migrations -name "*.ts" | sort | tail -1 | xargs basename > /app/src/migrations/.last_migration_run
+  chmod 644 /app/src/migrations/.last_migration_run
+  
+  # Run the initial migration
+  echo "Running initial migration..."
+  pnpm run payload:migrate
+else
+  # Smart migration detection
+  echo "Checking for new migrations..."
+  
+  # Get the last migration that was run
+  LAST_MIGRATION_RUN=$(cat /app/src/migrations/.last_migration_run 2>/dev/null || echo "none")
+  
+  # Get the latest migration file
+  LATEST_MIGRATION=$(find /app/src/migrations -name "*.ts" | sort | tail -1 | xargs basename 2>/dev/null || echo "none")
+  
+  echo "Last migration run: $LAST_MIGRATION_RUN"
+  echo "Latest migration available: $LATEST_MIGRATION"
+  
+  if [ "$LAST_MIGRATION_RUN" != "$LATEST_MIGRATION" ] && [ "$LATEST_MIGRATION" != "none" ]; then
+    echo "New migrations detected, running migrations..."
+    pnpm run payload:migrate
+    echo "$LATEST_MIGRATION" > /app/src/migrations/.last_migration_run
+    echo "Migration complete, updated last migration record."
+  else
+    echo "No new migrations detected, skipping migrations"
+  fi
 fi
-
-# Run migrations
-echo "Running database migrations..."
-pnpm run payload:migrate
 
 # Build if needed (for CICD skip build mode)
 if [ -f .next/skip-build ]; then
