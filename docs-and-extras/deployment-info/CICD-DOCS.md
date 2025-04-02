@@ -1,4 +1,6 @@
-# CICD Items to set in the Github repo's secrets
+# CICD Docs
+
+## CICD Items to set in the Github repo's secrets
 
 ## Repository Secrets (accessible to all workflows)
 
