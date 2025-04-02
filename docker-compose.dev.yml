@@ -13,16 +13,18 @@ services:
     networks:
       - dockernet-payloadcms-dev
 
-# Since we scaffolded the payloadcms project files (`pnpx create-payload-app payloadcms-cms-fe-portfolio2025 -t website`),
-# and had an issue with its Dockerfile use of corepack, we'll skip usage of the Dockerfile for this dev environment.
-# This way we can keep the Dockerfile in its original form (since it worked fine w/o Docker compose), for use with prod enviornment (Where we deploy with Docker, not docker compose).
   payloadcms-dev-portfolio2025:
     image: node:20-alpine
     container_name: payloadcms-dev-portfolio2025
     working_dir: /app
     volumes:
+      # Main bind mount for project files
       - ./payloadcms-cms-fe-portfolio2025:/app
+      # Explicitly bind mount the migrations directory for better visibility
+      - ./payloadcms-cms-fe-portfolio2025/src/migrations:/app/src/migrations
+      # Still use volume for node_modules to avoid performance issues
       - payloadcms_node_modules:/app/node_modules
+      # Still use volume for .next cache to improve build performance
       - payloadcms_next_cache:/app/.next
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
     env_file:

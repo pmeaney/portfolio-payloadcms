@@ -40,21 +40,35 @@ for i in $(seq 1 30); do
   sleep 3
 done
 
-# Check if migrations directory exists
-if [ ! -d "/app/src/migrations" ] || [ -z "$(ls -A /app/src/migrations 2>/dev/null)" ]; then
-  echo "Migrations directory is empty or doesn't exist, creating..."
+# Check if migrations directory exists INSIDE THE CONTAINER and create if necessary
+# Note: This is needed even with bind mounts because:
+# 1. The container needs the directory to exist with proper permissions
+# 2. It ensures the directory path is valid before PayloadCMS tries to access it
+# 3. It works as a fallback in case the host directory (~/payloadcms-cms-fe-portfolio2025__migrations) wasn't properly mounted
+# (CICD makes the mounts the binded directories via this: `-v ~/payloadcms-cms-fe-portfolio2025__migrations:/app/src/migrations`)
+# (Hence, here, we're just making sure the directory exists in the container, and letting it be accessible)
+if [ ! -d "/app/src/migrations" ]; then
+  echo "Migrations directory doesn't exist in container, creating..."
   mkdir -p /app/src/migrations
+  # Ensure the directory is writable by the container
+  chmod 755 /app/src/migrations
+fi
+
+# Create initial migration if directory is empty
+if [ -z "$(ls -A /app/src/migrations 2>/dev/null)" ]; then
+  echo "the /src/migration directory is empty."
+  echo "If you would like [entrypoint.sh] to create an initial migration, comment its create migration command back into the script"
+  echo "For now, leaving it commented out for clarity, now that an initial migration was created on the server"
+  echo "Note: This is a Production-First with Local Sync migration methodology-- the remote server is the origin of truth"
+  echo "Migration files will be stored in ~/payloadcms-cms-fe-portfolio2025__migrations on the host server"
+  echo "As needed, we pull the remote servers data to local dev machines for development"
+  echo "Creating initial migration..."
+  pnpm run payload:migrate:create --name initial
   
-  # Create initial migration if directory is empty
-  if [ -z "$(ls -A /app/src/migrations 2>/dev/null)" ]; then
-    echo "the /src/migration directory is empty."
-    echo "If you would like [entrypoint.sh] to create an initial migration, comment its create migration command back into the script"
-    echo "For now, leaving it commented out for clarity, now that an initial migration was created on the server"
-    echo "Note: This is a Production-First with Local Sync migration methodology-- the remote server is the origin of truth"
-    echo "As needed, we pull the remote servers data to local dev machines for development"
-    echo "Creating initial migration..."
-    pnpm run payload:migrate:create --name initial
-  fi
+  # Ensure the files are accessible outside the container (for bind mounts)
+  chmod -R 755 /app/src/migrations
+  
+  echo "Initial migration created and accessible in the host filesystem."
 fi
 
 # Run migrations
