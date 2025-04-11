@@ -21,7 +21,7 @@ The PayloadCMS Website Template
 1. Ready to deploy
 2. Ready to edit and push new changes to the server on every commit.
 3. For deployment, currently, the migration process is extremely simple: The inital migration runs, at which point, you log into the browser admin, from there click the option to seed the database.  This seeds the project into a basic PayloadCMS / NextJS / PostgreSQL blog template.  
-4. (From here, you'll either want to manually log in & commit those migration files (see below) or uncomment the CMS's CICD file (.github/workflows/b-cms-fe-check-deploy.yml), Lines 274-340 -- which upload the files from their bindmount location (the remote server's directory `/home/ghaCICDDevOpsUser/payloadcms-cms-fe-portfolio2025__migrations` to the github repo).  It's left in for reference.  More info below.)
+4. (From here, you'll either want to manually log in & commit those migration files (see below) or uncomment the CMS's CICD file (.github/workflows/b-cms-fe-check-deploy.yml), Lines 274-340 -- which upload the files from their bindmount location (the remote server's directory `/home/ghaCICDDevOpsUser/payloadcms-cms-fe-portfolio2025__migrations` to the github repo).  It's left in for reference.  More info below.  **After commenting those lines back in, the next commit will pick up the migration files & commit them to the repo**. I'll likely separate that out in the near future, as I begin working with PayloadCMS)
 
 
 ## Current state 
