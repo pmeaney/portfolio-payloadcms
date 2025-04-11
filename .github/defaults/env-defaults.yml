@@ -13,6 +13,9 @@ postgres_defaults: |
   POSTGRES_USER=payloadcms-user
   POSTGRES_PASSWORD=payloadcmsPass
 
+# For when you go to add these to the github secret in the repo settings--
+# 1. Do not include the two secrets at the bottom-- both have "SKIP" in their name. Delete them.)
+# 2. Be use to update 'NEXT_PUBLIC_SERVER_URL' to your live URL once ready-- for use by next.config.js
 payloadcms_defaults: |
   DATABASE_URI=postgres://payloadcms-user:payloadcmsPass@payloadcms-postgres-db-portfolio-prod:5432/payloadcms-db
   PAYLOAD_SECRET=0505d1e544a564c8730e83fb
@@ -21,11 +24,3 @@ payloadcms_defaults: |
   PREVIEW_SECRET=YOUR_SECRET_HERE
   PAYLOAD_SKIP_MIGRATION=true
   NEXT_SKIP_DB_CONNECT=true
-
-# For Payload Prod secret, delete the skips
-# For example:
-# DATABASE_URI=postgres://payloadcms-user:payloadcmsPass@payloadcms-postgres-db-portfolio-prod:5432/payloadcms-db
-# PAYLOAD_SECRET=0505d1e544a564c8730e83fb
-# NEXT_PUBLIC_SERVER_URL=http://localhost:3000
-# CRON_SECRET=YOUR_CRON_SECRET_HERE
-# PREVIEW_SECRET=YOUR_SECRET_HERE

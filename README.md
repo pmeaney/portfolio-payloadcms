@@ -54,7 +54,7 @@ Moving forward, I may return to add some additions to make the project easier to
 
 **Things to clear out if experimenting with deployment or schema changes**
 
-To clear out the project from the remote server, don't forget some of these steps:
+To clear out the project from the remote server, don't forget of these steps:
 
 Since this project involves bind mounts, you can find those via this command:
 
