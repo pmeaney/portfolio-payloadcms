@@ -9,6 +9,106 @@ Stack:
 - Payload CMS (CMS + NextJS)
 - Postgres
 
+# Current state of the project:
+
+Successfully deploying.  The initial migration & seeding work.
+Therefore, I am going to leave this project in its current state.  
+
+It's now a CICD Deployment Template plus a PayloadCMS Website Template.
+
+The PayloadCMS Website Template
+
+1. Ready to deploy
+2. Ready to edit and push new changes to the server on every commit.
+3. For deployment, currently, the migration process is extremely simple: The inital migration runs, at which point, you log into the browser admin, from there click the option to seed the database.  This seeds the project into a basic PayloadCMS / NextJS / PostgreSQL blog template.  
+4. (From here, you'll either want to manually log in & commit those migration files (see below) or uncomment the CMS's CICD file (.github/workflows/b-cms-fe-check-deploy.yml), Lines 274-340 -- which upload the files from their bindmount location (the remote server's directory `/home/ghaCICDDevOpsUser/payloadcms-cms-fe-portfolio2025__migrations` to the github repo).  It's left in for reference.  More info below.)
+
+
+## Current state 
+
+#### Build Log
+
+The successful build log is available at: [successful-build-log.md](docs-and-extras/successful-build/successful-build-log.md)
+
+#### Screenshots
+
+Screenshots of the deployment of the Official [PayloadCMS Website Template](https://github.com/payloadcms/payload/tree/main/templates/website) via the dockerized CICD Deployment process I setup (.github/workflows)
+
+![Logo](docs-and-extras/successful-build/post-migration-seed-1.jpg)
+
+![Logo](docs-and-extras/successful-build/post-migration-seed-2.jpg)
+
+![Logo](docs-and-extras/successful-build/post-migration-seed-3.jpg)
+
+
+# Keep in mind
+
+**CICD / Migration Caveat**
+
+In the CMS's CICD file (.github/workflows/b-cms-fe-check-deploy.yml), Lines 274-340 are commented out.  These lines, if commented back in, will commit the migration files to the github repo.  They're mostly just an experiment, at least at the stage at which this repo is:  the deployment & initial migration + auto-seeding work.  I may end up adding a new CICD file to separate out the migration process.
+
+So, lines 274-340 are mostly just for reference.  If commented back in, on commiting to the repo, migration those files will be uploaded from the remote server to the github repo.  Note: Those lines (274-240) in the CICD workflow (which upload the migration files) run after running the project, so, on the initial run, they will not exist yet since the build & migration take about 5 minutes.  Instead, on that initial run, no migration files will be found.  Hence, they'll get uploaded on the 2nd run.  In the state of this project, I've decided to leave them out.  This makes it easy to quickly deploy the project as a fresh launch of PayloadCMS-- that is, it's setup as a template with an automated deploy & initial migration.
+
+Moving forward, I may return to add some additions to make the project easier to run-- such as a controlled process to migrate updates to schema changes.
+
+
+**Things to clear out if experimenting with deployment or schema changes**
+
+To clear out the project from the remote server, don't forget some of these steps:
+
+Since this project involves bind mounts, you can find those via this command:
+
+```bash
+humanDevOpsUser@server2025-debian:~$ docker inspect -f '{{json .Mounts}}' containerNameOrID
+
+# Outputs: 
+[{"Type":"bind","Source":"/home/ghaCICDDevOpsUser/payloadcms-cms-fe-portfolio2025__migrations","Destination":"/app/src/migrations","Mode":"","RW":true,"Propagation":"rprivate"}]
+
+humanDevOpsUser@server2025-debian:~$ docker inspect -f '{{range .Mounts}}{{if eq .Type "bind"}}{{.Source}} -> {{.Destination}}{{println}}{{end}}{{end}}' containerNameOrID
+
+# Outputs: 
+/home/ghaCICDDevOpsUser/payloadcms-cms-fe-portfolio2025__migrations -> /app/src/migrations
+
+```
+
+We see the bind mount for the PayloadCMS is setup via the deployment (see its CICD File) is setup at this directory: /home/ghaCICDDevOpsUser/payloadcms-cms-fe-portfolio2025__migrations
+
+Check out its parent directory... It probably shows two directories-- the CMS & DB both have a bind mind for their respective database related files.
+
+For clearing out all data (e.g. for a fresh start, if you've run the migration before and the containers are already on the server) we'll want to remove both.
+
+```bash
+humanDevOpsUser@server2025-debian:~$ ls /home/ghaCICDDevOpsUser
+payloadcms-cms-fe-portfolio2025__migrations  payloadcms-postgres-db-portfolio2025
+```
+
+So, delete both of those:
+```bash
+humanDevOpsUser@server2025-debian:~$ sudo rm -rf payloadcms-cms-fe-portfolio2025__migrations && \
+humanDevOpsUser@server2025-debian:~$ sudo rm -rf payloadcms-postgres-db-portfolio2025
+```
+
+Next, delete the volumes used by the project
+
+`docker volume ls`
+
+```bash
+humanDevOpsUser@server2025-debian:~$ docker volume ls
+DRIVER    VOLUME NAME
+local     payloadcms-postgres-data-prod
+local     payloadcms-postgres-init-scripts-prod
+
+# the CICD will re-create them if they don't exist, so don't worry about recreating them.
+humanDevOpsUser@server2025-debian:~$ docker volume rm payloadcms-postgres-data-prod && docker volume rm payloadcms-postgres-init-scripts-prod
+
+```
+
+Now that you've deleted the bind mounts & volumes, you should be ok to delete the containers, and their data won't stick around.
+
+You might also want to run a docker prune to delete and related docker assets:
+`docker system prune -a --volume`.
+
+
 # To Do
 
 - [X] Setup CICD to deploy prod version to remote server
