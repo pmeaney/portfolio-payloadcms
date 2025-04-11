@@ -30,7 +30,7 @@ jobs:
     with:
       environment: production
     permissions:
-      contents: read
+      contents: write
       actions: write # Explicitly grant artifact permissions
     secrets:
       LINUX_SSH_PRIVATE_KEY: ${{ secrets.LINUX_SSH_PRIVATE_KEY }}

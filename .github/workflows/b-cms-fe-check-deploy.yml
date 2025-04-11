@@ -36,7 +36,7 @@ jobs:
     environment: production
     runs-on: ubuntu-latest
     permissions:
-      contents: write # to update github repo-- e.g. for adding  migrations from server after they're run
+      contents: write
       actions: write # Needed for artifact operations
     outputs:
       changes_detected: ${{ steps.check-changes.outputs.changes }}
