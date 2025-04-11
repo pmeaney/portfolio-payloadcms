@@ -203,6 +203,9 @@ jobs:
           # 4. The entrypoint.sh also creates this directory inside the container as a backup
           ssh prod "mkdir -p ~/payloadcms-cms-fe-portfolio2025__migrations"
 
+          # We'll also need a media directory to be persisted as a bind mount
+          ssh prod "mkdir -p ~/payloadcms-cms-fe-portfolio2025__media"
+
       - name: SSH in and Deploy Updated CMS-Frontend image with Prod Secrets
         id: step-deploy--cms-fe
         env:
@@ -248,6 +251,8 @@ jobs:
           # 2. Allows migration files created in the container to persist on the host
           # 3. Makes migration files accessible for committing to version control
           # 4. Preserves migrations across container restarts or rebuilds
+          # Note: Aside from that bind mount for database-related migration files,
+          # there's also another bind mount, for media files: ~/payloadcms-cms-fe-portfolio2025__media:/app/public/media
           ssh prod "docker pull ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest && \
                     docker rm -f payloadcms-cms-fe-portfolio-prod || true && \
                     docker run -d \
@@ -257,6 +262,7 @@ jobs:
                       -p 3000:3000 \
                       --env-file ~/payloadcms-prod-env.env \
                       -v ~/payloadcms-cms-fe-portfolio2025__migrations:/app/src/migrations \
+                      -v ~/payloadcms-cms-fe-portfolio2025__media:/app/public/media \
                       ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest"
 
           echo "Deleting temporarily created prod env file..."
@@ -297,7 +303,7 @@ jobs:
       #     echo "Waiting for migrations to complete..."
       #     sleep 10
 
-      #     # Create migrations directory locally if it doesn't exist
+      #     # Create migrations directory locally (on runner) if it doesn't exist
       #     mkdir -p ./payloadcms-cms-fe-portfolio2025/src/migrations
 
       #     # Copy migrations from server to local project

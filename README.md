@@ -73,7 +73,7 @@ humanDevOpsUser@server2025-debian:~$ docker inspect -f '{{range .Mounts}}{{if eq
 
 We see the bind mount for the PayloadCMS is setup via the deployment (see its CICD File) is setup at this directory: /home/ghaCICDDevOpsUser/payloadcms-cms-fe-portfolio2025__migrations
 
-Check out its parent directory... It probably shows two directories-- the CMS & DB both have a bind mind for their respective database related files.
+Check out its parent directory... It probably shows two directories-- the CMS & DB both have a bind mount for their respective database related files.
 
 For clearing out all data (e.g. for a fresh start, if you've run the migration before and the containers are already on the server) we'll want to remove both.
 
@@ -105,8 +105,10 @@ humanDevOpsUser@server2025-debian:~$ docker volume rm payloadcms-postgres-data-p
 
 Now that you've deleted the bind mounts & volumes, you should be ok to delete the containers, and their data won't stick around.
 
-You might also want to run a docker prune to delete and related docker assets:
+You might also want to run a docker prune to delete and related docker assets (e.g. the project network-- which is recreated if it doesnt exist, in the CICD workflow)
 `docker system prune -a --volume`.
+
+So, not to worry-- the CICD workflow will create the assets it needs if they don't exist.  For a fresh deploy, delete all project assets and simply re-commit to the project repo to activate the CICD workflow.
 
 
 # To Do
