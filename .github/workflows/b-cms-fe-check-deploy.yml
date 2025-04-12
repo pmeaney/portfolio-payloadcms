@@ -201,13 +201,10 @@ jobs:
           # 2. It sets proper ownership of the directory as the SSH user
           # 3. While Docker can create it automatically, this gives us control over permissions
           # 4. The entrypoint.sh also creates this directory inside the container as a backup
+          ssh prod "mkdir -p ~/payloadcms-cms-fe-portfolio2025__migrations"
+
           # We'll also need a media directory to be persisted as a bind mount
-
-          ssh prod "sudo mkdir -p /home/patDevOpsUser/payloadcms-proj-files/payloadcms-cms-general/payloadcms-cms-fe-portfolio2025__migrations"
-          ssh prod "sudo mkdir -p /home/patDevOpsUser/payloadcms-proj-files/payloadcms-cms-general/payloadcms-cms-fe-portfolio2025__media"
-
-          # Give ownership of `payloadcms-proj-files` dir to human user.  This dir has the migrations, media, and temporarily-- the env var files (cicd deletes env var files once containers spun up).
-          ssh prod "sudo chown -R patDevOpsUser:patDevOpsUser /home/patDevOpsUser/payloadcms-proj-files"
+          ssh prod "mkdir -p ~/payloadcms-cms-fe-portfolio2025__media"
 
       - name: SSH in and Deploy Updated CMS-Frontend image with Prod Secrets
         id: step-deploy--cms-fe
@@ -242,27 +239,20 @@ jobs:
 
           # Create a temporary env file on the remote server
           echo "Creating temporary environment file..."
-          ssh prod "sudo mkdir -p /home/patDevOpsUser/payloadcms-proj-files/payloadcms-cms-general"
-          ssh prod "sudo bash -c 'echo \"$PAYLOADCMS__PROD_ENV\" > /home/patDevOpsUser/payloadcms-proj-files/payloadcms-cms-general/payloadcms-prod-env.env'"
-          ssh prod "sudo chown -R patDevOpsUser:patDevOpsUser /home/patDevOpsUser/payloadcms-proj-files/payloadcms-cms-general"
+          ssh prod "echo '$PAYLOADCMS__PROD_ENV' > ~/payloadcms-prod-env.env"
 
           # Ensure Docker network exists (create if it doesn't)
           ssh prod "docker network ls --filter name=private-payloadcms-pg-dockernet -q | grep -q . || docker network create private-payloadcms-pg-dockernet"
 
           # Deploy to remote server with environment file
-          # The critical addition here is the bind mount: -v <Migrations Dir on remote Server>:/app/src/migrations
+          # The critical addition here is the bind mount: -v ~/payload-migrations:/app/src/migrations
           # This bind mount:
-          # 1. Maps the host directory migration dir to container migrations dir (/home/patDevOpsUser/payloadcms-proj-files/payloadcms-cms-general/payloadcms-cms-fe-portfolio2025__migrations <-- to --> /app/src/migrations )
+          # 1. Maps the host directory ~/payload-migrations to container path /app/src/migrations
           # 2. Allows migration files created in the container to persist on the host
           # 3. Makes migration files accessible for committing to version control
           # 4. Preserves migrations across container restarts or rebuilds
           # Note: Aside from that bind mount for database-related migration files,
           # there's also another bind mount, for media files: ~/payloadcms-cms-fe-portfolio2025__media:/app/public/media
-          # Note: Both locations need to have their absolute directory path, to the Human DevOps user's home dir.
-          # This makes it easier for the Human DevOps user to log in & find the bind mounted related files (migrations, media)
-          # And, makes it easier to pull the migrations & data via a sync script.
-          # i.e. ~/ would go to the CICD User's home dir: /home/ghaCICDBotUser
-          # hence, we provide the absolute path to the human user's home dir: /home/patDevOpsUser
           ssh prod "docker pull ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest && \
                     docker rm -f payloadcms-cms-fe-portfolio-prod || true && \
                     docker run -d \
@@ -270,13 +260,13 @@ jobs:
                       --network private-payloadcms-pg-dockernet \
                       --network main-network--npm020325 \
                       -p 3000:3000 \
-                      --env-file /home/patDevOpsUser/payloadcms-proj-files/payloadcms-cms-general/payloadcms-prod-env.env \
-                      -v /home/patDevOpsUser/payloadcms-proj-files/payloadcms-cms-general/payloadcms-cms-fe-portfolio2025__migrations:/app/src/migrations \
-                      -v /home/patDevOpsUser/payloadcms-proj-files/payloadcms-cms-general/payloadcms-cms-fe-portfolio2025__media:/app/public/media \
+                      --env-file ~/payloadcms-prod-env.env \
+                      -v ~/payloadcms-cms-fe-portfolio2025__migrations:/app/src/migrations \
+                      -v ~/payloadcms-cms-fe-portfolio2025__media:/app/public/media \
                       ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest"
 
           echo "Deleting temporarily created prod env file..."
-          ssh prod "rm /home/patDevOpsUser/payloadcms-proj-files/payloadcms-cms-general/payloadcms-prod-env.env"
+          ssh prod "rm ~/payloadcms-prod-env.env"
 
           if [ "${{ steps.check-changes.outputs.changes }}" == "true" ]; then
             echo "Deploying new frontend version..."
@@ -318,7 +308,7 @@ jobs:
 
       #     # Copy migrations from server to local project
       #     echo "Fetching migrations from server..."
-      #     scp -r prod:/home/patDevOpsUser/payloadcms-proj-files/payloadcms-cms-general/payloadcms-cms-fe-portfolio2025__migrations/* ./payloadcms-cms-fe-portfolio2025/src/migrations/ || true
+      #     scp -r prod:~/payloadcms-cms-fe-portfolio2025__migrations/* ./payloadcms-cms-fe-portfolio2025/src/migrations/ || true
 
       #     # Check if any migrations were fetched
       #     MIGRATION_COUNT=$(find ./payloadcms-cms-fe-portfolio2025/src/migrations -type f | wc -l)
