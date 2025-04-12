@@ -100,11 +100,11 @@ jobs:
           END
 
           # Create directory on remote server for the temporary prod env file
-          ssh prod "mkdir -p ~/payloadcms-postgres-db-portfolio2025"
+          ssh prod "mkdir -p /home/patDevOpsUser/payloadcms-proj-files/payloadcms-postgres-general"
 
           # Create the temporary prod env file directly on the remote server
           # Echo the env var content with proper quoting for multiline preservation
-          ssh prod "echo '$POSTGRES__PROD_ENV' > ~/payloadcms-postgres-db-portfolio2025/postgres-env-prod.env"
+          ssh prod "echo '$POSTGRES__PROD_ENV' > /home/patDevOpsUser/payloadcms-proj-files/payloadcms-postgres-general/postgres-env-prod.env"
 
           # Create Docker network if it doesn't exist
           # This network is for PayloadCMS & Postgres to communicate, hence "private" in its name
@@ -113,17 +113,20 @@ jobs:
           # Create volumes if they don't exist
           ssh prod "docker volume inspect payloadcms-postgres-data-prod >/dev/null 2>&1 || docker volume create payloadcms-postgres-data-prod"
           ssh prod "docker volume inspect payloadcms-postgres-init-scripts-prod >/dev/null 2>&1 || docker volume create payloadcms-postgres-init-scripts-prod"
-          
+
           # Run the container on the remote server
           ssh prod "\
           docker run -d \
             --name payloadcms-postgres-db-portfolio-prod \
             --network private-payloadcms-pg-dockernet \
-            --env-file ~/payloadcms-postgres-db-portfolio2025/postgres-env-prod.env \
+            --env-file /home/patDevOpsUser/payloadcms-proj-files/payloadcms-postgres-general/postgres-env-prod.env \
             -p 5432:5432 \
             -v payloadcms-postgres-data-prod:/var/lib/postgresql/data \
             -v payloadcms-postgres-init-scripts-prod:/docker-entrypoint-initdb.d \
             postgres:17"
+
+          echo "Deleting temporarily created prod env file..."
+          ssh prod "rm /home/patDevOpsUser/payloadcms-proj-files/payloadcms-postgres-general/postgres-env-prod.env"
 
           # Verify the container is running in a separate command
           CONTAINER_STATUS=$(ssh prod "docker ps -f name=payloadcms-postgres-db-portfolio-prod --format '{{.Status}}'")
