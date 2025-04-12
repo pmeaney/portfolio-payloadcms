@@ -18,13 +18,11 @@ services:
     container_name: payloadcms-dev-portfolio2025
     working_dir: /app
     volumes:
-      # Main bind mount for project files
+      # Full project mount-- good for local dev.  See CMS CICD file for its bind mount of migration & media directories on remote server
       - ./payloadcms-cms-fe-portfolio2025:/app
-      # Explicitly bind mount the migrations directory for better visibility
-      - ./payloadcms-cms-fe-portfolio2025/src/migrations:/app/src/migrations
-      # Still use volume for node_modules to avoid performance issues
+      
+      # Persistent volumes for node ecosystem
       - payloadcms_node_modules:/app/node_modules
-      # Still use volume for .next cache to improve build performance
       - payloadcms_next_cache:/app/.next
     command: sh -c "npm install -g pnpm && pnpm install && pnpm dev"
     env_file:

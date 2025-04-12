@@ -38,3 +38,12 @@ public/sitemap*.xml
 *.pid
 *.seed
 *.pid.lock
+
+# Database backup files
+*.sql
+*.dump
+*.backup
+
+# Ignore everything in sync-from-prod except the relevant readme file
+sync-from-prod/*
+!sync-from-prod/DB-SYNC-README.md
