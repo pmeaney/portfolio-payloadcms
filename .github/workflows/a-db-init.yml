@@ -100,7 +100,9 @@ jobs:
           END
 
           # Create directory on remote server for the temporary prod env file
-          ssh prod "mkdir -p /home/patDevOpsUser/payloadcms-proj-files/payloadcms-postgres-general"
+          # And, make sure human user has access 
+          ssh prod "sudo mkdir -p /home/patDevOpsUser/payloadcms-proj-files/payloadcms-postgres-general"
+          ssh prod "sudo chown -R patDevOpsUser:patDevOpsUser /home/patDevOpsUser/payloadcms-proj-files"
 
           # Create the temporary prod env file directly on the remote server
           # Echo the env var content with proper quoting for multiline preservation

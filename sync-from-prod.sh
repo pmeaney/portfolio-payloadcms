@@ -82,7 +82,7 @@ echo -e "Migrations Path: $MIGRATIONS_PATH"
 # 1. Fetch migration files from production server
 echo -e "\n${YELLOW}Fetching migration files from production server...${NC}"
 mkdir -p $MIGRATIONS_PATH
-ssh $PROD_USER@$PROD_SERVER "cd ~/payloadcms-cms-fe-portfolio2025__migrations && tar czf - ." | tar xzf - -C $MIGRATIONS_PATH
+ssh $PROD_USER@$PROD_SERVER "cd /home/patDevOpsUser/payloadcms-proj-files/payloadcms-cms-fe-portfolio2025__migrations && tar czf - ." | tar xzf - -C $MIGRATIONS_PATH
 
 if [ $? -eq 0 ]; then
   echo -e "${GREEN}✓ Migration files fetched successfully!${NC}"
