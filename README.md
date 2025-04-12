@@ -13,7 +13,10 @@ Stack:
 ## Local dev
 
 - Clone project
+- Delete migration files if they exist-- I'll clear that up soon, might need to tinker a little more
 - Run `docker compose -f docker-compose.dev.yml up`
+  - This spins up a Postgres DB, then a PayloadCMS instance.
+  - The PayloadCMS instance will run an entrypoint.sh file once its up and running, which, if no migration exists yet (they shouldn't on the first run-- so, just make sure ./payloadcms-cms-fe-portfolio2025/src/migrations is clear on the first deployment), will create the initial one.  Once the app is up and running, you'll be able to log into its admin dashboard on the browser at `localhost:3000/admin` and run a database seeding process which will create migration files & seed the website template with placeholder blog content.
 
 
 ## Remote / CICD things to be aware of:
