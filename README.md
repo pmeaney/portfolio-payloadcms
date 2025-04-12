@@ -1,13 +1,25 @@
 [![Build Status](https://github.com/pmeaney/tmp-payloadcms-portfolio/actions/workflows/z-main.yml/badge.svg)](https://github.com/pmeaney/tmp-payloadcms-portfolio/actions/workflows/z-main.yml)
 
-
 # Dockerized PayloadCMS + Postgres Portfolio Project Template
 
-A template for local development of a PayloadCMS website.
+This project is a CICD Deployment Template of the Official PayloadCMS Website Template.
+
+Its my framework for 1. A CICD Deployment of the project to my remote server, as well as 2. a local deployment environment setup (a script to pull remote data & media, then run the project locally) ready to edit and publish new changes.
 
 Stack:
 - Payload CMS (CMS + NextJS)
 - Postgres
+
+## Local dev
+
+- Clone project
+- Run `docker compose -f docker-compose.dev.yml up`
+
+
+## Remote / CICD things to be aware of:
+
+- On push to the repo, the CICD workflow is activated-- it will deploy a Database (PostgreSQL) & a CMS (PayloadCMS) via Docker.  To make CICD Deployment work requires some setup of repo secrets & a github token token-- see [CICD-DOCS](./docs-and-extras/deployment-info/CICD-DOCS.md) & the CICD files (`.github/workflows`) for more info.
+- the CICD Bot creates bind mount directories for the PayloadCMS project at /home/ghaCICDDevOpsUser -- for migrations files, and for media files
 
 # Current state of the project:
 
@@ -40,16 +52,7 @@ Screenshots of the deployment of the Official [PayloadCMS Website Template](http
 
 ![Logo](docs-and-extras/successful-build/post-migration-seed-3.jpg)
 
-
-# Keep in mind
-
-**CICD / Migration Caveat**
-
-In the CMS's CICD file (.github/workflows/b-cms-fe-check-deploy.yml), Lines 274-340 are commented out.  These lines, if commented back in, will commit the migration files to the github repo.  They're mostly just an experiment, at least at the stage at which this repo is:  the deployment & initial migration + auto-seeding work.  I may end up adding a new CICD file to separate out the migration process.
-
-So, lines 274-340 are mostly just for reference.  If commented back in, on commiting to the repo, migration those files will be uploaded from the remote server to the github repo.  Note: Those lines (274-240) in the CICD workflow (which upload the migration files) run after running the project, so, on the initial run, they will not exist yet since the build & migration take about 5 minutes.  Instead, on that initial run, no migration files will be found.  Hence, they'll get uploaded on the 2nd run.  In the state of this project, I've decided to leave them out.  This makes it easy to quickly deploy the project as a fresh launch of PayloadCMS-- that is, it's setup as a template with an automated deploy & initial migration.
-
-Moving forward, I may return to add some additions to make the project easier to run-- such as a controlled process to migrate updates to schema changes.
+## Docs
 
 **Since starting this project, and through various docker deployments, data migrations, and a "production first, local sync" data synchronizing... I've gained a better understanding of the differences between the needs of remote production environments vs. local development environments.  So, I thought I would include a review of those practices and how this project approaches them:** 
 
@@ -129,13 +132,6 @@ So, not to worry-- the CICD workflow will create the assets it needs if they don
 - Original Repo, where I figured out a deployment methodology: 
   - [template-payloadcms-portfolio2025](https://github.com/pmeaney/template-payloadcms-portfolio2025)
 - [PayloadCMS's Website Template](https://github.com/payloadcms/payload/tree/main/templates/website)
-
-
-## Local dev
-
-- Clone project
-- Run `docker compose -f docker-compose.dev.yml up`
-
 
 ## CICD Workflow
 
