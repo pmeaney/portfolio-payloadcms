@@ -163,11 +163,11 @@ jobs:
             --build-arg ENV_FILE=env-defaults.env \
             --build-arg SKIP_NEXTJS_BUILD=true \
             --no-cache \
-            -t ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest \
+            -t ghcr.io/pmeaney/portfolio-payloadcms:latest \
             ./payloadcms-cms-fe-portfolio2025
             
           # Push the Docker image to GitHub Container Registry
-          docker push ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest
+          docker push ghcr.io/pmeaney/portfolio-payloadcms:latest
 
           #  Delete local env var file (defaults) after transfer
           rm ./payloadcms-cms-fe-portfolio2025/env-defaults.env
@@ -253,7 +253,7 @@ jobs:
           # 4. Preserves migrations across container restarts or rebuilds
           # Note: Aside from that bind mount for database-related migration files,
           # there's also another bind mount, for media files: ~/payloadcms-cms-fe-portfolio2025__media:/app/public/media
-          ssh prod "docker pull ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest && \
+          ssh prod "docker pull ghcr.io/pmeaney/portfolio-payloadcms:latest && \
                     docker rm -f payloadcms-cms-fe-portfolio-prod || true && \
                     docker run -d \
                       --name payloadcms-cms-fe-portfolio-prod \
@@ -263,7 +263,7 @@ jobs:
                       --env-file ~/payloadcms-prod-env.env \
                       -v ~/payloadcms-cms-fe-portfolio2025__migrations:/app/src/migrations \
                       -v ~/payloadcms-cms-fe-portfolio2025__media:/app/public/media \
-                      ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest"
+                      ghcr.io/pmeaney/portfolio-payloadcms:latest"
 
           echo "Deleting temporarily created prod env file..."
           ssh prod "rm ~/payloadcms-prod-env.env"

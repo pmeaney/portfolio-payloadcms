@@ -29,7 +29,7 @@ Another pre-req re the docker networks, but those already get created if they do
 ```bash
 patDevOpsUser@server020525-debianNpm:~$ docker ps -a
 CONTAINER ID   IMAGE                                             COMMAND                  CREATED          STATUS          PORTS                                                                                  NAMES
-ffc43887bdff   ghcr.io/pmeaney/tmp-payloadcms-portfolio:latest   "docker-entrypoint.s…"   16 minutes ago   Up 16 minutes   0.0.0.0:3000->3000/tcp, :::3000->3000/tcp                                              payloadcms-cms-fe-portfolio-prod
+ffc43887bdff   ghcr.io/pmeaney/portfolio-payloadcms:latest   "docker-entrypoint.s…"   16 minutes ago   Up 16 minutes   0.0.0.0:3000->3000/tcp, :::3000->3000/tcp                                              payloadcms-cms-fe-portfolio-prod
 6256ebb1261f   postgres:17                                       "docker-entrypoint.s…"   18 minutes ago   Up 18 minutes   0.0.0.0:5432->5432/tcp, :::5432->5432/tcp                                              payloadcms-postgres-db-portfolio-prod
 12c26f9e53dd   jc21/nginx-proxy-manager:latest                   "/init"                  2 days ago       Up 2 days       0.0.0.0:80-81->80-81/tcp, :::80-81->80-81/tcp, 0.0.0.0:443->443/tcp, :::443->443/tcp   nginx-proxy-mgr-020325
 775e276864fe   postgres:17                                       "docker-entrypoint.s…"   2 days ago       Up 2 days       5432/tcp                                                                               postgres-for-nginx-proxy-mgr-020325

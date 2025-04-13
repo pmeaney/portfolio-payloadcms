@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/pmeaney/tmp-payloadcms-portfolio/actions/workflows/z-main.yml/badge.svg)](https://github.com/pmeaney/tmp-payloadcms-portfolio/actions/workflows/z-main.yml)
+[![Build Status](https://github.com/pmeaney/portfolio-payloadcms/actions/workflows/z-main.yml/badge.svg)](https://github.com/pmeaney/portfolio-payloadcms/actions/workflows/z-main.yml)
 
 # Dockerized PayloadCMS + Postgres Portfolio Project Template
 
@@ -241,7 +241,7 @@ flowchart TB
                 - Set file permissions
                 - Expose port 3000"]
                 RunnerStage --> FinalDockerImage[/"Docker Image
-                ghcr.io/pmeaney/tmp-payloadcms-portfolio2025:latest"/]
+                ghcr.io/pmeaney/portfolio-payloadcms:latest"/]
             end
         end
     end
@@ -253,7 +253,7 @@ flowchart TB
         AuthGHCR --> CreateEnvFile["Create Prod Env File
         from PAYLOAD__SECRET_ENV_FILE"]
         CreateEnvFile --> PullImage["docker pull
-        ghcr.io/pmeaney/tmp-payloadcms-portfolio2025:latest"]
+        ghcr.io/pmeaney/portfolio-payloadcms:latest"]
         PullImage --> RemoveOldContainer["docker rm -f
         payloadcms-cms-fe-portfolio-prod"]
         RemoveOldContainer --> RunContainer["docker run
