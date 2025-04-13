@@ -324,3 +324,21 @@ flowchart TB
     class BaseImage,DepsStage,BuilderStage,PrepareRuntime,RunBuild,RuntimePrep,RunnerStage,CopySourceFiles,CopyBuildOutput dockerstage
     class EntrypointScript,EnvCheck,ParseDBParams,WaitForDB,RunMigrations,BuildNextJS entrypoint
 ```
+
+
+## Notes to self
+
+Clearing out the old project
+
+delete bind mounts & volumes, then cleanup
+
+```
+sudo rm -rf /home/ghaCICDDevOpsUser/payloadcms-cms-fe-portfolio2025__migrations/
+sudo rm -rf /home/ghaCICDDevOpsUser/payloadcms-cms-fe-portfolio2025__media/
+sudo rm -rf /home/ghaCICDDevOpsUser/payloadcms-postgres-db-portfolio2025/
+docker volume rm payloadcms-postgres-data-prod && docker volume rm payloadcms-postgres-init-scripts-prod
+
+# then remove the containers
+# then prune: `docker system prune -a --volumes`
+```
+
