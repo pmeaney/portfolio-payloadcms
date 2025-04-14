@@ -21,7 +21,7 @@ Stack:
 
 ## Remote / CICD things to be aware of:
 
-- On push to the repo, the CICD workflow is activated-- it will deploy a Database (PostgreSQL) & a CMS (PayloadCMS) via Docker.  To make CICD Deployment work requires some setup of repo secrets & a github token token-- see [CICD-DOCS](./docs-and-extras/deployment-info/CICD-DOCS.md) & the CICD files (`.github/workflows`) for more info.
+- On push to the repo, the CICD workflow is activated-- it will deploy a Database (PostgreSQL) & a CMS (PayloadCMS) via Docker.  To make CICD Deployment work requires some setup of repo secrets & a github token token-- see [CICD-DOCS](./docs-and-extras/Deployment-and-Setup/deployment-info/CICD-DOCS.md) & the CICD files (`.github/workflows`) for more info.
 - the CICD Bot creates bind mount directories for the PayloadCMS project at /home/ghaCICDDevOpsUser -- for migrations files, and for media files
 
 # Current state of the project:
@@ -59,8 +59,8 @@ Screenshots of the deployment of the Official [PayloadCMS Website Template](http
 
 **Since starting this project, and through various docker deployments, data migrations, and a "production first, local sync" data synchronizing... I've gained a better understanding of the differences between the needs of remote production environments vs. local development environments.  So, I thought I would include a review of those practices and how this project approaches them:** 
 
-- [Overview of Development and Production Workflows](./docs-and-extras/OVERVIEW-Dev-and-Prod-Workflows.md)
-- [Production to Local data & content Synchronization](./docs-and-extras/OVERVIEW-Prod-To-Local-Sync.md)
+- [Overview of Development and Production Workflows](./docs-and-extras/Deployment-and-Setup/OVERVIEW-Dev-and-Prod-Workflows.md)
+- [Production to Local data & content Synchronization](./docs-and-extras/Deployment-and-Setup/OVERVIEW-Prod-To-Local-Sync.md)
   
 # Troubleshooting deployment
 
