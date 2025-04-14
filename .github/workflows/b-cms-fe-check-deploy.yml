@@ -96,9 +96,18 @@ jobs:
           # Debug: Show the commit we're comparing against
           echo "Comparing current commit with: ${{ steps.get-last-commit.outputs.last_commit }}"
 
+          # Check if the commit exists first
+          if ! git cat-file -e ${{ steps.get-last-commit.outputs.last_commit }} 2>/dev/null; then
+            echo "Warning: Last deployment commit does not exist in this repository"
+            echo "Using first available commit instead"
+            LAST_COMMIT=$(git rev-list --max-parents=0 HEAD)
+          else
+            LAST_COMMIT="${{ steps.get-last-commit.outputs.last_commit }}"
+          fi
+
           # Check for changes between last deployed commit and current HEAD
           # Only show file names, not content
-          CHANGES=$(git diff --name-only ${{ steps.get-last-commit.outputs.last_commit }} HEAD -- ./payloadcms-cms-fe-portfolio2025)
+          CHANGES=$(git diff --name-only $LAST_COMMIT HEAD -- ./payloadcms-cms-fe-portfolio2025)
 
           if [ -z "$CHANGES" ]; then
             echo "No changes detected in payloadcms-cms-fe-portfolio2025 directory since last deployment"
