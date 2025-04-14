@@ -43,17 +43,17 @@ The PayloadCMS Website Template
 
 #### Build Log
 
-The successful build log is available at: [successful-build-log.md](docs-and-extras/successful-build/successful-build-log.md)
+The successful build log is available at: [successful-build-log.md](docs-and-extras/Deployment-and-Setup/successful-build/successful-build-log.md)
 
 #### Screenshots
 
 Screenshots of the deployment of the Official [PayloadCMS Website Template](https://github.com/payloadcms/payload/tree/main/templates/website) via the dockerized CICD Deployment process I setup (.github/workflows)
 
-![Logo](docs-and-extras/successful-build/post-migration-seed-1.jpg)
+![Img](docs-and-extras/Deployment-and-Setup/successful-build/post-migration-seed-1.jpg)
 
-![Logo](docs-and-extras/successful-build/post-migration-seed-2.jpg)
+![Img](docs-and-extras/Deployment-and-Setup/successful-build/post-migration-seed-2.jpg)
 
-![Logo](docs-and-extras/successful-build/post-migration-seed-3.jpg)
+![Img](docs-and-extras/Deployment-and-Setup/successful-build/post-migration-seed-3.jpg)
 
 ## Docs
 
