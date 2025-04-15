@@ -1,6 +1,9 @@
 # To use this Dockerfile, you have to set `output: 'standalone'` in your next.config.js file.
 FROM node:20-alpine AS base
 
+# Set Node memory limit for the entire application
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
 # Install pnpm only once in the base image
 RUN npm install -g pnpm@10.3.0
 

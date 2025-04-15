@@ -269,6 +269,9 @@ jobs:
                       --network private-payloadcms-pg-dockernet \
                       --network main-network--npm020325 \
                       -p 3000:3000 \
+                      -e NODE_OPTIONS="--max-old-space-size=4096" \
+                      --memory=4g \
+                      --memory-swap=6g \
                       --env-file ~/payloadcms-prod-env.env \
                       -v ~/payloadcms-cms-fe-portfolio2025__migrations:/app/src/migrations \
                       -v ~/payloadcms-cms-fe-portfolio2025__media:/app/public/media \
