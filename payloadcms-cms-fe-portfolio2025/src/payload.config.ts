@@ -22,8 +22,9 @@ const dirname = path.dirname(filename);
 
 export default buildConfig({
   upload: {
+    abortOnLimit: true,
     limits: {
-      fileSize: 10000000, // 5MB in bytes
+      fileSize: 10000000,
     },
   },
   admin: {
