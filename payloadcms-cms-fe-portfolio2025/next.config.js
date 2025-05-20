@@ -6,7 +6,8 @@ import redirects from './redirects.js'
 const nextConfig = {
   images: {
     remotePatterns: [
-      ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
+      
+      ...[process.env.NEXT_PUBLIC_SERVER_URL].map((item) => {
         const url = new URL(item)
 
         return {
